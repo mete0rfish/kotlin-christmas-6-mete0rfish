@@ -22,4 +22,17 @@ public class Product {
     public void buy() {
         this.quantity--;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("- ").append(name)
+                .append(" ").append(price).append("원")
+                .append(" ").append(quantity).append("개");
+
+        if(promotion != null) {
+            builder.append(" ").append(promotion);
+        }
+        return builder.toString();
+    }
 }
