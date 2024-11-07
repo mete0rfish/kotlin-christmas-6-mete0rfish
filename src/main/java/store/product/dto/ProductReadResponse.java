@@ -9,4 +9,13 @@ public record ProductReadResponse(
         String promotion
 ) {
 
+    @Override
+    public String toString() {
+        return "ProductReadResponse{" +
+                "name='" + name + '\'' +
+                ", price=" + price +
+                ", quantity=" + quantity +
+                ", promotion='" + promotion + '\'' +
+                '}';
+    }
 }
