@@ -11,7 +11,7 @@ import java.util.List;
 
 public class MdReader {
     private final static String productMdPath = "src/main/resources/products.md";
-    private final static String promotionMdPath = "src/main/resources/promotion.md";
+    private final static String promotionMdPath = "src/main/resources/promotions.md";
 
     public static List<ProductReadResponse> readProduct() {
         List<ProductReadResponse> productList = new ArrayList<>();
