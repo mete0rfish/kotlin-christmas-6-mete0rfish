@@ -1,6 +1,5 @@
 package store.util;
 
-import store.product.Promotion;
 import store.product.dto.ProductReadResponse;
 import store.product.dto.PromotionReadResponse;
 
@@ -8,14 +7,16 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class MdReader {
-    public List<ProductReadResponse> readProduct(String filePath) {
+    private final static String productMdPath = "src/main/resources/products.md";
+    private final static String promotionMdPath = "src/main/resources/promotion.md";
+
+    public static List<ProductReadResponse> readProduct() {
         List<ProductReadResponse> productList = new ArrayList<>();
 
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(productMdPath))) {
             String line;
             br.readLine(); // 헤드 삭제
 
@@ -35,10 +36,10 @@ public class MdReader {
         return productList;
     }
 
-    public List<PromotionReadResponse> readPromotion(String filePath) {
+    public static List<PromotionReadResponse> readPromotion() {
         List<PromotionReadResponse> promotionList = new ArrayList<>();
 
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(promotionMdPath))) {
             String line;
             br.readLine(); // 헤드 삭제
 

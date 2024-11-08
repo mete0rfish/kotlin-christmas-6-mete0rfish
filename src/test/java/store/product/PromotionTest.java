@@ -17,9 +17,8 @@ class PromotionTest {
     @Test
     void createPromotionTest() {
         // given
-        MdReader mdReader = new MdReader();
         // when
-        List<PromotionReadResponse> responseList = mdReader.readPromotion("src/main/resources/promotions.md");
+        List<PromotionReadResponse> responseList = MdReader.readPromotion();
         System.out.println(responseList.get(1).toString());
         // then
         assertThat(responseList.size()).isEqualTo(3);
