@@ -16,7 +16,7 @@ class ProductTest {
         // given
         // when
         List<ProductReadResponse> responseList = MdReader.readProduct();
-        System.out.println(responseList.get(1).toString());
+        System.out.println(responseList.getFirst().toString());
         // then
         assertThat(responseList.size()).isEqualTo(16);
     }

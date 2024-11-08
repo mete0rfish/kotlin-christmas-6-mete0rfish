@@ -1,7 +1,5 @@
 package store.product.view;
 
-import store.product.Product;
-
 import static camp.nextstep.edu.missionutils.Console.readLine;
 
 public class InputView {

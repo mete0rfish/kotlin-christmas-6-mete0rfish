@@ -1,10 +1,9 @@
-package store.product;
+package store.product.domain;
 
 import java.text.ParseException;
 import java.util.Date;
 import java.util.Objects;
 
-import camp.nextstep.edu.missionutils.*;
 import store.product.dto.PromotionReadResponse;
 
 import static store.util.DateFormat.formatter;
@@ -24,7 +23,7 @@ public record Promotion(
         return null;
     }
 
-    public Promotion of(PromotionReadResponse response) {
+    public static Promotion of(PromotionReadResponse response) {
         Date startDate = null;
         Date endDate = null;
         try {
@@ -42,4 +41,6 @@ public record Promotion(
                 endDate
         );
     }
+
+
 }
