@@ -41,6 +41,4 @@ public record Promotion(
                 endDate
         );
     }
-
-
 }
