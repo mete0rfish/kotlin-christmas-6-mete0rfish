@@ -3,6 +3,8 @@ package store.product.domain;
 import store.product.dto.ProductReadResponse;
 import store.product.view.InputView;
 
+import java.text.DecimalFormat;
+
 public class Product {
     private final String name;
     private final int price;
@@ -50,7 +52,7 @@ public class Product {
     }
 
     public int[] calculateFreeAndPaidStock(int quantity) {
-        if (promotion == null) {
+        if (promotion == null || promotion.validateExpiration()) {
             reduceRegularStock(quantity);
             return new int[] {0, 0, quantity};
         }
@@ -140,12 +142,12 @@ public class Product {
         String result = "";
         if(this.promotion != null) {
             result += "- " + name +
-                            " " + price + "원" +
+                            " " + getDisplayPrice(price) + "원" +
                             " " + getDisplayCount(promotionStock) +
                         " " + promotion.name() + "\n";
         }
         result += "- " + name +
-                " " + price + "원" +
+                " " + getDisplayPrice(price) + "원" +
                 " " + getDisplayCount(regularStock);
         return result;
     }
@@ -155,5 +157,10 @@ public class Product {
             return String.valueOf(stock) + "개";
         }
         return "재고 없음";
+    }
+
+    private String getDisplayPrice(int price) {
+        DecimalFormat df = new DecimalFormat("###,###");
+        return df.format(price);
     }
 }
