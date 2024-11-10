@@ -9,7 +9,6 @@ import store.product.dto.ProductRemainDTO;
 import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class PaymentTest {
     @DisplayName("멤버십 비활성화 시, 정상적으로 계산한다.")

@@ -4,18 +4,15 @@ import store.product.domain.Cart;
 import store.product.domain.Payment;
 import store.product.domain.Product;
 import store.product.domain.Store;
-import store.product.dto.ProductPaidDTO;
-import store.product.dto.ProductReadResponse;
 import store.product.view.InputView;
 import store.product.view.OutputView;
-import store.util.MdReader;
 import store.util.Parser;
 
 import java.util.*;
 
 public class ProductController {
-    private InputView inputView;
-    private OutputView outputView;
+    private final InputView inputView;
+    private final OutputView outputView;
 
     public ProductController(InputView inputView, OutputView outputView) {
         this.inputView = inputView;

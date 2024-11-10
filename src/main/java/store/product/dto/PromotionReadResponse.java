@@ -1,7 +1,5 @@
 package store.product.dto;
 
-import java.util.Date;
-
 public record PromotionReadResponse(
         String name,
         int buy,

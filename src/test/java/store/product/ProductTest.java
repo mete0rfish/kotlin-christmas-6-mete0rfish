@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import store.product.domain.Product;
 import store.product.domain.Store;
 import store.product.dto.ProductReadResponse;
-import store.product.view.InputView;
 import store.util.MdReader;
 import store.util.Parser;
 

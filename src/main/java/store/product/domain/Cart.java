@@ -2,14 +2,10 @@ package store.product.domain;
 
 import store.product.dto.ProductFreeDTO;
 import store.product.dto.ProductPaidDTO;
-import store.product.dto.ProductReadResponse;
 import store.product.dto.ProductRemainDTO;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 public class Cart {
     private final List<CartItem> items = new ArrayList<>();

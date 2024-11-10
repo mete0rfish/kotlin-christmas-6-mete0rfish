@@ -6,10 +6,6 @@ import store.product.dto.ProductRemainDTO;
 
 import java.util.List;
 
-/*
- - 맴버십 할인 액 = min(8000, (결제 금액 * 0.3))
- - 총 결제 액 = 결제 금액 - 멤버십 할인 액
- */
 public class Payment {
     private final static int MAX_MEMBERSHIP_DISCOUNT = 8000;
 
@@ -41,10 +37,6 @@ public class Payment {
             return paidPrice + remainPrice - getMembershipDiscount();
         }
         return paidPrice + remainPrice;
-    }
-
-    public int getPaidPrice() {
-        return paidPrice;
     }
 
     public int getFreePrice() {

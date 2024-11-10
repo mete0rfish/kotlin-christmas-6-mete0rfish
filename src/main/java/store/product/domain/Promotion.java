@@ -1,10 +1,6 @@
 package store.product.domain;
 
-import java.text.ParseException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.Objects;
 
 import camp.nextstep.edu.missionutils.DateTimes;
 import store.product.dto.PromotionReadResponse;
@@ -18,13 +14,6 @@ public record Promotion(
         LocalDate startDate,
         LocalDate endDate
 ) {
-
-    public Promotion findByName(String name) {
-        if(Objects.equals(this.name, name)) {
-            return this;
-        }
-        return null;
-    }
 
     public boolean validateExpiration() {
         LocalDate currentTime = DateTimes.now().toLocalDate();
