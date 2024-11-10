@@ -15,7 +15,6 @@ class StoreTest {
         Store store = new Store();
 
         //then
-        //assertThat(store.getProducts().size()).isEqualTo(16);
-        System.out.println(store.getProducts().get(1).toString());
+        assertThat(store.getProducts().size()).isEqualTo(11);
     }
 }
