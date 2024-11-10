@@ -18,15 +18,26 @@ public class Store {
     public void createProducts() {
         List<ProductReadResponse> responses = MdReader.readProduct();
         responses.forEach(response -> {
-            if(response.promotion().equals("null")) {
-                findProductByName(response.name()).ifPresent(product -> product.setRegularStock(response.quantity()));
-            }
-            if(!response.promotion().equals("null")) {
-                Product product = Product.of(response, findPromotionByName(response.promotion())
-                        .orElseThrow(() -> new IllegalArgumentException("프로모션을 찾을 수 없습니다: " + response.promotion())));
+            Product product = findProductByName(response.name());
+            if(product == null) {
+                product = Product.of(response);
                 products.add(product);
             }
+
+            setPromotion(product, response.promotion(), response.quantity());
         });
+    }
+
+    private void setPromotion(Product product, String promotion, int quantity) {
+        if(!promotion.equals("null")) {
+            findPromotionByName(promotion).ifPresent((promo) -> {
+                product.setPromotion(promo);
+                product.setPromotionStock(quantity);
+            });
+            return;
+        }
+
+        product.setRegularStock(quantity);
     }
 
     public void createPromotions() {
@@ -37,6 +48,7 @@ public class Store {
     }
 
     public List<Product> getProducts() {
+
         return products;
     }
 
@@ -50,9 +62,9 @@ public class Store {
                 .findAny();
     }
 
-    public Optional<Product> findProductByName(String name) {
+    public Product findProductByName(String name) {
         return products.stream()
                 .filter(product -> product.getName().equals(name))
-                .findAny();
+                .findFirst().orElse(null);
     }
 }
