@@ -1,9 +1,12 @@
 package store.product.domain;
 
 import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Objects;
 
+import camp.nextstep.edu.missionutils.DateTimes;
 import store.product.dto.PromotionReadResponse;
 
 import static store.util.DateFormat.formatter;
@@ -12,8 +15,8 @@ public record Promotion(
         String name,
         int buyCount,
         int getCount,
-        Date startDate,
-        Date endDate
+        LocalDate startDate,
+        LocalDate endDate
 ) {
 
     public Promotion findByName(String name) {
@@ -23,16 +26,19 @@ public record Promotion(
         return null;
     }
 
-    public static Promotion of(PromotionReadResponse response) {
-        Date startDate = null;
-        Date endDate = null;
-        try {
-            startDate = formatter.parse(response.start_date());
-            endDate = formatter.parse(response.end_date());
-        } catch (ParseException e) {
-            System.out.println(e.getMessage());
-            // TODO 커스텀 예외
+    public boolean validateExpiration() {
+        LocalDate currentTime = DateTimes.now().toLocalDate();
+        if (currentTime.isBefore(startDate) || currentTime.isAfter(endDate)) {
+            return true;
         }
+        return false;
+    }
+
+    public static Promotion of(PromotionReadResponse response) {
+        LocalDate startDate = null;
+        LocalDate endDate = null;
+        startDate = LocalDate.parse(response.start_date(), formatter);
+        endDate = LocalDate.parse(response.end_date(), formatter);
         return new Promotion(
                 response.name(),
                 response.buy(),
