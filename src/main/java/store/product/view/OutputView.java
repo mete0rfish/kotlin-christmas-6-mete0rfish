@@ -33,11 +33,11 @@ public class OutputView {
 
         cart.getItems()
                 .forEach(cartItem -> {
-                    System.out.printf("%-7s\t\t\t%-2s\t\t  %,d%n",
-                            cartItem.getProductName(),
-                            cartItem.getTotalQuantity(),
-                            cartItem.getTotalPrice());
-                        });
+                    System.out.printf("%-5s\t\t\t\t%-2s\t\t  %-5s%n",
+                        cartItem.getProductName(),
+                        cartItem.getTotalQuantity(),
+                        cartItem.getTotalPrice());
+                });
 
         System.out.println("=============증\t\t정===============");
         cart.getItems()
