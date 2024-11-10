@@ -1,6 +1,7 @@
 package store.product.domain;
 
 import store.product.dto.ProductReadResponse;
+import store.product.view.InputView;
 
 public class Product {
     private final String name;
@@ -41,37 +42,67 @@ public class Product {
 
     public int[] calculateFreeAndPaidStock(int quantity) {
         if (promotion == null) {
-            return new int[] {0, quantity};
+            reduceRegularStock(quantity);
+            return new int[] {0, 0, quantity};
         }
 
         int buyAndGetCount = promotion.buyCount() + promotion.getCount();
-        int maxPromoApplications = Math.min(quantity / buyAndGetCount, promotionStock / promotion.getCount());
-        int freeItems =  maxPromoApplications * promotion.getCount();
+        int maxPromoApplications = Math.min(quantity / buyAndGetCount, promotionStock / buyAndGetCount);
 
-        int paidItems = quantity - freeItems;
-        if(freeItems > 0) {
-            reducePromotionStock(freeItems);
+        int freeItems =  maxPromoApplications * promotion.getCount();
+        int paidItems = maxPromoApplications * promotion.buyCount();
+        int remainItems = quantity - (freeItems + paidItems);
+
+        // promotion보다 적을 경우
+        if(maxPromoApplications == 0) {
+            int lessPromoItem = promotion.getCount();
+            String input = InputView.inputLessPromotion(name, lessPromoItem);
+            if(input.equals("Y")) {
+                freeItems = lessPromoItem;
+                paidItems = remainItems;
+                remainItems = 0;
+            }
         }
-        if(paidItems > promotionStock) {
-            int remainingPaidStock = paidItems - promotionStock;
-            reducePromotionStock(promotionStock);
-            reduceRegularStock(remainingPaidStock);
-            return new int[] {freeItems, paidItems};
-        } else {
-            reducePromotionStock(paidItems);
-            return new int[] {freeItems, paidItems};
+
+        // 프로모션 부족한 경우
+        if(remainItems > promotionStock - freeItems - paidItems) {
+            boolean isYes = handleLessPromotionStock(freeItems + paidItems, remainItems);
+            if(isYes) {
+                return new int[] {paidItems, freeItems, remainItems};
+            }
+            return new int[] {paidItems, freeItems, 0};
         }
+        // 프로모션 낭낭한 경우
+
+        reducePromotionStock(paidItems + freeItems);
+        reduceRegularStock(remainItems);
+
+        return new int[] {paidItems, freeItems, remainItems};
     }
 
-    private void reducePromotionStock(int quantity) {
-        if(quantity <= promotionStock) {
-            promotionStock -= quantity;
+    private boolean handleLessPromotionStock(int totalPromoItems, int remainItems) {
+        reducePromotionStock(totalPromoItems);
+
+        String input = InputView.inputNotPromotion(name, remainItems);
+        if(input.equals("Y")) {
+            reducePromotionStock(promotionStock);
+            reduceRegularStock(remainItems-promotionStock);
+            return true;
+        }
+
+        return false;
+    }
+
+    private synchronized void reducePromotionStock(int quantity) {
+        if(quantity > promotionStock) {
+            promotionStock = 0;
             return;
         }
-        throw new IllegalArgumentException("프로모션 재고가 부족합니다.");
+
+        this.promotionStock -= quantity;
     }
 
-    private void reduceRegularStock(int quantity) {
+    private synchronized void reduceRegularStock(int quantity) {
         if(quantity <= regularStock) {
             regularStock -= quantity;
             return;
@@ -101,12 +132,19 @@ public class Product {
         if(this.promotion != null) {
             result += "- " + name +
                             " " + price + "원" +
-                            " " + promotionStock + "개" +
+                            " " + getDisplayCount(promotionStock) +
                         " " + promotion.name() + "\n";
         }
         result += "- " + name +
                 " " + price + "원" +
-                " " + regularStock + "개";
+                " " + getDisplayCount(regularStock);
         return result;
+    }
+
+    private String getDisplayCount(int stock) {
+        if(stock > 0) {
+            return String.valueOf(stock) + "개";
+        }
+        return "재고 없음";
     }
 }
