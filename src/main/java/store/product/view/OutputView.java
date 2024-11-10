@@ -1,7 +1,11 @@
 package store.product.view;
 
+import store.product.domain.Cart;
+import store.product.domain.Payment;
 import store.product.domain.Product;
 import store.product.domain.Store;
+import store.product.dto.ProductFreeDTO;
+import store.product.dto.ProductPaidDTO;
 
 import java.util.List;
 
@@ -17,4 +21,40 @@ public class OutputView {
         });
     }
 
+    public void displayPaymentInfo(Cart cart, Payment payment) {
+        int totalQuantity = cart.getTotalQuantity();
+        int totalPrice = cart.getTotalPrice();
+        int totalPromotionPrice = payment.getFreePrice();
+        int membershipDiscount = payment.getMembershipDiscount();
+        int totalPaidPrice = payment.getTotalPrice();
+
+        System.out.println("==============W 편의점================");
+        System.out.printf("%-7s\t\t\t%-2s\t\t  %s%n", "상품명", "수량", "금액");
+
+        cart.getItems()
+                .forEach(cartItem -> {
+                    System.out.printf("%-7s\t\t\t%-2s\t\t  %,d%n",
+                            cartItem.getProductName(),
+                            cartItem.getTotalQuantity(),
+                            cartItem.getTotalPrice());
+                        });
+
+        System.out.println("=============증\t\t정===============");
+        cart.getItems()
+                .forEach(cartItem -> {
+                    ProductFreeDTO freeDTO = cartItem.getFreeProduct();
+                    if(freeDTO.freeCount() != 0) {
+                        System.out.printf("%-7s\t\t\t%-2s%n",
+                                freeDTO.name(),
+                                freeDTO.freeCount());
+                    }
+                });
+
+        System.out.println("====================================");
+
+        System.out.printf("%-7s\t\t\t%-2s\t\t  %,d%n", "총구매액", totalQuantity, totalPrice);
+        System.out.printf("%-7s\t\t\t\t\t  -%,d%n", "행사할인", totalPromotionPrice);
+        System.out.printf("%-7s\t\t\t\t\t  -%,d%n", "멤버십할인", membershipDiscount);
+        System.out.printf("%-7s\t\t\t\t\t  %,d%n", "내실돈", totalPaidPrice);
+    }
 }
