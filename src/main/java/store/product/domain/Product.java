@@ -40,6 +40,15 @@ public class Product {
         return new Product(response.name(), response.price(), response.quantity());
     }
 
+    public void validateProductRange(int count) {
+        if(count < 0) {
+            throw new IllegalArgumentException("[ERROR] 올바르지 않은 형식으로 입력했습니다. 다시 입력해 주세요.");
+        }
+        if(count > promotionStock) {
+            throw new IllegalArgumentException("[ERROR] 재고 수량을 초과하여 구매할 수 없습니다. 다시 입력해 주세요.");
+        }
+    }
+
     public int[] calculateFreeAndPaidStock(int quantity) {
         if (promotion == null) {
             reduceRegularStock(quantity);

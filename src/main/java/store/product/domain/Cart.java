@@ -15,6 +15,7 @@ public class Cart {
     private final List<CartItem> items = new ArrayList<>();
 
     public void buyItem(Product product, int quantity) {
+        product.validateProductRange(quantity);
         int[] quantities = product.calculateFreeAndPaidStock(quantity);
         items.add(new CartItem(product, quantities[0], quantities[1], quantities[2]));
     }
