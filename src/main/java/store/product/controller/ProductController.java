@@ -29,9 +29,8 @@ public class ProductController {
 
             Cart cart = new Cart();
 
-            Map<String, Integer> nameAndQuantity = inputBuy(store);
+            inputAndBuy(store, cart);
 
-            buyProducts(store, nameAndQuantity, cart);
             Payment payment = Payment.from(cart.getCartItemPaidDTOs(), cart.getCartItemFreeDTOs(), cart.getCartItemRemainDTOs());
             setMembership(payment);
 
@@ -43,24 +42,30 @@ public class ProductController {
         }
     }
 
-    private Map<String, Integer> inputBuy(Store store) {
-        try {
-            outputView.displayWelcomeAndList(store);
-            String input = inputView.inputBuy();
-            return Parser.parseBuyInput(input);
+    private void inputAndBuy(Store store, Cart cart) {
+        try{
+            Map<String, Integer> nameAndQuantity = inputBuy(store);
+            buyProducts(store, nameAndQuantity, cart);
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
-            return inputBuy(store);
+            inputAndBuy(store, cart);
         }
+    }
+
+    private Map<String, Integer> inputBuy(Store store) {
+        outputView.displayWelcomeAndList(store);
+        String input = inputView.inputBuy();
+        return Parser.parseBuyInput(input);
     }
 
     private void buyProducts(Store store, Map<String, Integer> nameAndQuantity, Cart cart) {
         nameAndQuantity.keySet().forEach(name -> {
             Product product = store.findProductByName(name);
             int quantity = nameAndQuantity.get(name);
-            if (product != null) {
-                cart.buyItem(product, quantity);
+            if (product == null) {
+                throw new IllegalArgumentException("[ERROR] 존재하지 않는 상품입니다. 다시 입력해 주세요.");
             }
+            cart.buyItem(product, quantity);
         });
     }
 
