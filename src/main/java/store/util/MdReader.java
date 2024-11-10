@@ -49,7 +49,7 @@ public class MdReader {
                 int buy = Integer.parseInt(fields[1]);
                 int get = Integer.parseInt(fields[2]);
                 String start_date = fields[3];
-                String end_date = fields[3];
+                String end_date = fields[4];
 
                 PromotionReadResponse response = new PromotionReadResponse(name, buy, get, start_date, end_date);
                 promotionList.add(response);
