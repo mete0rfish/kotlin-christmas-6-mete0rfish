@@ -57,38 +57,39 @@ public class Product {
             return new int[] {0, 0, quantity};
         }
 
+        int[] stockDetails = calculatePromoStockDetails(quantity);
+        int freeItems =  stockDetails[0];
+        int paidItems = stockDetails[1];
+        int remainItems = stockDetails[2];
+
+        if(stockDetails[3] == 0 && handleInsufficientPromotionItems(freeItems, remainItems)) {
+            return new int[] {paidItems, freeItems, remainItems};
+        }
+
+        updateStocks(paidItems, freeItems, remainItems);
+        return new int[] {paidItems, freeItems, remainItems};
+    }
+
+    private int[] calculatePromoStockDetails(int quantity) {
         int buyAndGetCount = promotion.buyCount() + promotion.getCount();
         int maxPromoApplications = Math.min(quantity / buyAndGetCount, promotionStock / buyAndGetCount);
-
-        int freeItems =  maxPromoApplications * promotion.getCount();
+        int freeItems = maxPromoApplications * promotion.getCount();
         int paidItems = maxPromoApplications * promotion.buyCount();
         int remainItems = quantity - (freeItems + paidItems);
 
-        // promotion보다 적을 경우
-        if(maxPromoApplications == 0) {
-            int lessPromoItem = promotion.getCount();
-            String input = InputView.inputLessPromotion(name, lessPromoItem);
-            if(input.equals("Y")) {
-                freeItems = lessPromoItem;
-                paidItems = remainItems;
-                remainItems = 0;
-            }
-        }
+        return new int[] {freeItems, paidItems, remainItems, maxPromoApplications};
+    }
 
-        // 프로모션 부족한 경우
-        if(remainItems > promotionStock - freeItems - paidItems) {
-            boolean isYes = handleLessPromotionStock(freeItems + paidItems, remainItems);
-            if(isYes) {
-                return new int[] {paidItems, freeItems, remainItems};
-            }
-            return new int[] {paidItems, freeItems, 0};
+    private boolean handleInsufficientPromotionItems(int freeItems, int remainItems) {
+        if(remainItems > promotionStock - freeItems) {
+            return handleLessPromotionStock(freeItems, remainItems);
         }
-        // 프로모션 낭낭한 경우
+        return false;
+    }
 
+    private void updateStocks(int paidItems, int freeItems, int remainItems) {
         reducePromotionStock(paidItems + freeItems);
         reduceRegularStock(remainItems);
-
-        return new int[] {paidItems, freeItems, remainItems};
     }
 
     private boolean handleLessPromotionStock(int totalPromoItems, int remainItems) {
