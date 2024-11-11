@@ -21,33 +21,29 @@ public class OutputView {
     }
 
     public void displayPaymentInfo(Cart cart, Payment payment) {
-        int totalQuantity = cart.getTotalQuantity();
-        int totalPrice = cart.getTotalPrice();
-        int totalPromotionPrice = payment.getFreePrice();
-        int membershipDiscount = payment.getMembershipDiscount();
-        int totalPaidPrice = payment.getTotalPrice();
-
         System.out.println("==============W 편의점================");
         System.out.printf("%-7s\t\t\t%-2s\t\t  %s%n", "상품명", "수량", "금액");
-
         cart.getItems()
                 .forEach(cartItem -> {
-                    System.out.printf("%-5s\t\t\t\t%-2s\t\t  %-5s%n",
-                        cartItem.getProductName(),
-                        cartItem.getTotalQuantity(),
-                        cartItem.getTotalPrice());
+                    System.out.printf("%-5s\t\t\t\t%-2s\t\t  %-5s%n", cartItem.getProductName(), cartItem.getTotalQuantity(), cartItem.getTotalPrice());
                 });
-
         System.out.println("=============증\t\t정===============");
         cart.getItems()
                 .forEach(cartItem -> {
                     ProductFreeDTO freeDTO = cartItem.getFreeProduct();
                     if(freeDTO.freeCount() != 0) {
-                        System.out.printf("%-7s\t\t\t%-2s%n",
-                                freeDTO.name(),
-                                freeDTO.freeCount());
+                        System.out.printf("%-7s\t\t\t%-2s%n", freeDTO.name(), freeDTO.freeCount());
                     }
                 });
+        displayPrices(cart, payment);
+    }
+
+    private void displayPrices(Cart cart, Payment payment) {
+        int totalQuantity = cart.getTotalQuantity();
+        int totalPrice = cart.getTotalPrice();
+        int totalPromotionPrice = payment.getFreePrice();
+        int membershipDiscount = payment.getMembershipDiscount();
+        int totalPaidPrice = payment.getTotalPrice();
 
         System.out.println("====================================");
 

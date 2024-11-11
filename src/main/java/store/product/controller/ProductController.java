@@ -21,16 +21,11 @@ public class ProductController {
 
     public void run() {
         Store store = new Store();
-
         while(true) {
-
             Cart cart = new Cart();
-
             inputAndBuy(store, cart);
-
             Payment payment = Payment.from(cart.getCartItemPaidDTOs(), cart.getCartItemFreeDTOs(), cart.getCartItemRemainDTOs());
             setMembership(payment);
-
             outputView.displayPaymentInfo(cart, payment);
             String input = inputView.inputMoreBuy();
             if(input.equals("N")) {
